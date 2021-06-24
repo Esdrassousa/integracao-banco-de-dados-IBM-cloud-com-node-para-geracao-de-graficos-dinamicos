@@ -1,7 +1,6 @@
 {
   "name": "requisicoes_fortesol",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon ./bin/server.js"
@@ -22,5 +21,17 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  }
+  },
+  "bin": {
+    "requisicoes_fortesol": "server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Esdrassousa/integracao-banco-de-dados-IBM-cloud-com-node-para-geracao-de-graficos-dinamicos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Esdrassousa/integracao-banco-de-dados-IBM-cloud-com-node-para-geracao-de-graficos-dinamicos/issues"
+  },
+  "homepage": "https://github.com/Esdrassousa/integracao-banco-de-dados-IBM-cloud-com-node-para-geracao-de-graficos-dinamicos#readme",
+  "description": ""
 }
