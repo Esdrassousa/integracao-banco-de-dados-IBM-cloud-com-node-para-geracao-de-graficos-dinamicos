@@ -2,6 +2,7 @@
   "name": "requisicoes_fortesol",
   "version": "1.0.0",
   "main": "index.js",
+  "module": "module",
   "scripts": {
     "start": "nodemon ./bin/server.js"
   },
@@ -18,6 +19,7 @@
     "http": "0.0.1-security",
     "http-proxy-middleware": "^2.0.0",
     "influxdb-nodejs": "^3.1.0",
+    "react": "^17.0.2",
     "react-chartjs-2": "^3.0.3",
     "react-router-dom": "^5.2.0"
   },
