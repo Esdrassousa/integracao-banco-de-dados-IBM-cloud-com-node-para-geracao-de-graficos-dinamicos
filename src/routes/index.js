@@ -65,8 +65,8 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         console.log('data atual: ',(String(data_completa_atual)))
         console.log('data anterio : ', (String(data_completa_anterior)))
         ////////////////////////////////
-        //res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
-        res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
+        res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
+        //res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
 
         
         
