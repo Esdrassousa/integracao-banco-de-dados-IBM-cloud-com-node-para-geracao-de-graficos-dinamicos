@@ -1,86 +1,110 @@
-const express = require('express')
-const router = express.Router();
-const Cloudant = require('@cloudant/cloudant');
-const { all } = require('async');
-const  url  = "https://apikey-v2-2i7l0qp9wwbw87vpija9mi31o7yennrevo7fd87xpz00:974d78d495165a06f9f8a753ffe33542@42b86470-c6b5-4354-813b-727ba9f47dce-bluemix.cloudantnosqldb.appdomain.cloud";
-const cors = require('cors');
-const bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+import React , {useEffect} from 'react'
+import './style.css'
+import ReactDOM from  'react-dom'
+import { Chart } from "react-google-charts";
+import { useState } from 'react';
+import api from '../../services/api'
+import logoFortesol from '../../imagens/logo.png';
+import {Line} from "react-chartjs-2";
+global.a = 0;
+global.data = 0
+export default function Home(){
 
-const route =  router.post('/', jsonParser , async (request,response) =>{
-   
-
-    const {min}  = request.body
+      
+      const [dado ,setDados] = useState([['', 'corrente'], 
+      ['2021-03-20, 09:59:22',5.88],
+      
+     
+      ],
+     );
     
-    console.log(min)
-    //console.log('o valor de min é: ' , min)
-    //min = parseInt(min)
-    try{
-        const cloudant = Cloudant({
-            url:url,
-            plugins:{
-                iamauth:{
-                    iamApiKey:"zAOvP080YFlleja6dHriE4WzpiPUoUJh9o-VeMpbTqPy"
-                }
-            }
+     async function dados(e){
+        e.preventDefault()
+        if (global.a == 0) {
+          var min = '5'
+          global.data = {
+            min
+          } 
+      }else{
+        var min = global.
+        global.data = {
+          min
+        } 
+      }
+        await api.post('/', global.data).then(response => {
+          //var a = response.data
+          setDados(response.data)
+                
         })
-        let allbd = await cloudant.db.list();
-        console.log(`${allbd}`)
-        const db = cloudant.db.use("amazenacorrente")
-
-        ///////data/////////////////////
-        const data  =  new Date()
-        mes_atual = data.getMonth()+1
-        dia_atual  = data.getDate()
-        ano_atual  = data.getFullYear()
-        horas_atual = data.getHours()
-        horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
-        minutes_atual = data.getMinutes()
-        minutes_atual = ((minutes_atual < 10) ? '0':'') + minutes_atual
-        
-        minute_anterior = minutes_atual - min
-        minute_anterior = ((minute_anterior< 10) ? '0' : '' ) + minute_anterior
-
-        data_completa_atual =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_atual + ":" + minutes_atual + ":" +'00'
-        data_completa_anterior =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_atual + ":" + minute_anterior + ":" +'00'
-
-        
-        ////////////////////////////////
-        res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
-        //res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
-
-        console.log((String(data_completa_anterior)))
-        
-        res = res['docs']
-        //console.log('o valor é: ' , res[1])
-        tamanho = res.length
-        //console.log(tamanho)
-        vetor =[['', 'corrente']]
-        for(i=0; i<tamanho ; i++){
-           res1 = res[i]['_id'] 
-           const splits = res1.split(',')
-           resI = res[i]    
-           //console.log('aqui é: ', resI)
-           vetor.push([resI['data'],parseFloat(resI['ia'])])
-        }
- //console.log(vetor.slice(0,10))
-
-        response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-        response.setHeader('Access-Control-Allow-Credentials', true);
-      
-
        
-        await response.status(200).send(vetor);
-        
-        
-       
-      
-    }catch(err){
-        console.log(err);
+
     }
+
+    async function clickBotao(id){
+      
+      global.a = id
+
+      
+      /* const data = {
+        a
+      }
+      await api.post('/',data) */
+    }
+
+    /* var b = [['', 'corrente']]  */
+    useEffect(async  () => {
+      if (global.a == 0) {
+        var min = '5'
+        global.data = {
+          min
+        } 
+    }else{
+      var min = global.a
+      global.data = {
+        min
+      } 
+    }
+      await api.post('/', global.data).then(response => {
+
+        
+        setDados(response.data)
+        
+        
+        
+    })
+      },[dado])
+      console.log("o valor é: " , dado)
     
+      
+    return(
+        <div >
+            <div class='logo'>
+            <img src={logoFortesol} alt='logo'/>
+            </div>
+            
+            <div class='graficos'>
 
-})
 
-module.exports =route
+           
+            </div>
+            
+          <form onSubmit={dados}>
+          <Chart onCha
+            width={'500px'}
+            height={'300px'}
+            chartType="LineChart"
+            data={dado}
+            
+            />
+            
+              <button  type='button' type="submit">click</button>
+          </form>
+
+          <div class = 'botoes'>
+            <button onClick ={ (e) => clickBotao(5)}>5 min</button>
+            <button onClick = { (e) => clickBotao(35)}>15 min</button>
+           
+          </div>
+        </div>
+    )
+}
