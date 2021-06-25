@@ -1,1 +1,1 @@
-web: npm NotDev
+web: npm start
