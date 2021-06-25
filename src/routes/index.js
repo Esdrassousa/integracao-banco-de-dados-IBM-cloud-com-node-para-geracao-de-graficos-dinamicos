@@ -84,8 +84,8 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         }
  //console.log(vetor.slice(0,10))
 
-        //response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-        //response.setHeader('Access-Control-Allow-Credentials', true);
+        response.setHeader('Access-Control-Allow-Origin', process.env.URL);
+        response.setHeader('Access-Control-Allow-Credentials', true);
       
 
        
