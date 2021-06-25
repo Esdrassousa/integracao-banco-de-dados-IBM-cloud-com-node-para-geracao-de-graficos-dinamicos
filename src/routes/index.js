@@ -74,7 +74,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         //console.log('o valor é: ' , res[1])
         tamanho = res.length
         //console.log(tamanho)
-        vetor =[['', 'corrente']]
+        vetor =[[data_completa_atual],['', 'corrente']]
         for(i=0; i<tamanho ; i++){
            res1 = res[i]['_id'] 
            const splits = res1.split(',')
