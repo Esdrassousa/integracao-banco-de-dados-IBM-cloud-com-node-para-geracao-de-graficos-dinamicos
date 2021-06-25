@@ -9,7 +9,6 @@ const  url  = process.env.URL_IMB;
 const cors = require('cors');
 const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const route =  router.post('/', jsonParser , async (request,response) =>{
    
@@ -17,8 +16,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
     const {min}  = request.body
     
     console.log(process.env.KEY_IAM)
-    //console.log('o valor de min é: ' , min)
-    //min = parseInt(min)
+    
     try{
         const cloudant = Cloudant({
             url:url,
