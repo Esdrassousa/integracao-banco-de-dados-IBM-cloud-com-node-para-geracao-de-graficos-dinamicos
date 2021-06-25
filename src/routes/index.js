@@ -36,7 +36,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         mes_atual = data.getMonth()+1
         dia_atual  = data.getDate()
         ano_atual  = data.getFullYear()
-        horas_atual = data.getHours()
+        horas_atual = data.getHours() - 3
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
         minutes_atual  = data.getMinutes()
         minutes_atual = ((minutes_atual < 10)? '0': '')+minutes_atual
@@ -74,7 +74,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         //console.log('o valor é: ' , res[1])
         tamanho = res.length
         //console.log(tamanho)
-        vetor =[[data_completa_atual],['', 'corrente']]
+        vetor =[['', 'corrente']]
         for(i=0; i<tamanho ; i++){
            res1 = res[i]['_id'] 
            const splits = res1.split(',')
