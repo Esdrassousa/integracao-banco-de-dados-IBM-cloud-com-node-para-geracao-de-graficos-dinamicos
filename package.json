@@ -5,7 +5,7 @@
   "module": "module",
   "scripts": {
     "start": "nodemon ./bin/server.js",
-    "NotDev": "node ./bin/server.js"
+    "NotDev": "PROD=true node ./bin/server.js"
   },
   "keywords": [],
   "author": "",
