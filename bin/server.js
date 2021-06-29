@@ -6,7 +6,7 @@ const debug = require('debug')('nodestr:serve')
 
 
 
-const port = normalizePorte(process.env.PORT || '3002');
+const port = normalizePorte(process.env.PORT || '3003');
 
 
 const server = http.createServer(app)
@@ -28,7 +28,7 @@ function normalizePorte(val){
     if (port >=0){
         return port;
     }
-
+    
     return false
 }
 

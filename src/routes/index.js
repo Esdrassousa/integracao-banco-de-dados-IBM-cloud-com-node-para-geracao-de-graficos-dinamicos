@@ -12,8 +12,8 @@ var jsonParser = bodyParser.json()
 const route =  router.post('/', jsonParser , async (request,response) =>{
    
 
-    const {min}  = request.body
-    
+    const {minutes_recebidos}  = request.body
+    var minutes_recebidos_int = parseInt(minutes_recebidos)
     console.log(process.env.KEY_IAM)
     
     try{
@@ -35,35 +35,53 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         mes_atual = data.getMonth()+1
         dia_atual  = data.getDate()
         ano_atual  = data.getFullYear()
-        horas_atual = data.getHours() - 3
+        horas_atual = data.getHours() - 0
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
-        minutes_atual  = data.getMinutes()
+        minutes_atual  = data.getMinutes() + 2
         minutes_atual = ((minutes_atual < 10)? '0': '')+minutes_atual
         horas_anterior = horas_atual
+        diminui = minutes_recebidos_int - minutes_atual
+        console.log(minutes_recebidos_int > minutes_atual , diminui,minutes_recebidos_int,minutes_atual)
 
-        if( min > minutes_atual){
+        
+        
+        if(minutes_recebidos_int > minutes_atual){
 
+            console.log('entrou aqui', minutes_recebidos_int)
             horas_anterior = horas_atual - 1
             horas_anterior = ((horas_anterior < 10) ? '0' : '') + horas_anterior
-            minute_anterior = 59 -  (min - minutes_atual)
+            minute_anterior = 59 -  (minutes_recebidos_int - minutes_atual)
+            console.log(minute_anterior)
             minute_anterior  = ((minute_anterior < 10) ? '0': '') + minute_anterior
 
             
         }else{
-            minute_anterior = minutes_atual -  min
+            minute_anterior = minutes_atual -  minutes_recebidos_int
             minute_anterior = ((minute_anterior < 10) ? '0' : '' ) + minute_anterior
+            
+
         }
         
         
 
-
-
-        data_completa_atual =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_atual + ":" + minutes_atual + ":" +'00'
+        
+        data_completa_atual =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_atual + ":" + minutes_atual + ":" +'59'
         data_completa_anterior =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_anterior + ":" + minute_anterior + ":" +'00'
 
         console.log('data atual: ',(String(data_completa_atual)))
         console.log('data anterio : ', (String(data_completa_anterior)))
         ////////////////////////////////
+        function delay_tempo(segundos){
+            var start = new Date().getTime();
+            var end = start
+
+            while(end > start - segundos){
+                start =  new Date().getTime()
+            }
+
+        }
+
+        delay_tempo(3000)
         res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
         //res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
 
@@ -91,7 +109,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         await response.status(200).send(vetor);
         
         
-       
+        console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
       
     }catch(err){
         console.log(err);
