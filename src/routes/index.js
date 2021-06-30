@@ -14,7 +14,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
 
     const {minutes_recebidos}  = request.body
     var minutes_recebidos_int = parseInt(minutes_recebidos)
-    console.log(process.env.KEY_IAM)
+    console.log(minutes_recebidos_int)
     
     try{
         const cloudant = Cloudant({
@@ -35,7 +35,24 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         mes_atual = data.getMonth()+1
         dia_atual  = data.getDate()
         ano_atual  = data.getFullYear()
-        horas_atual = data.getHours() - 3
+
+        horas_atual = data.getHours()
+
+        if (horas_atual == 0){
+            horas_atual = 21
+        }
+
+        if (horas_atual == 1){
+            horas_atual = 22
+        }
+
+        if (horas_atual == 2){
+            horas_atual = 23
+        }
+        else{
+
+            horas_atual = data.getHours() - 3
+        }
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
         minutes_atual  = data.getMinutes() + 2
         minutes_atual = ((minutes_atual < 10)? '0': '')+minutes_atual
@@ -81,7 +98,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
 
         }
 
-        delay_tempo(3000)
+        //delay_tempo(3000)
         res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
         //res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
 
@@ -109,7 +126,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         await response.status(200).send(vetor);
         
         
-        console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
+        //console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
       
     }catch(err){
         console.log(err);
