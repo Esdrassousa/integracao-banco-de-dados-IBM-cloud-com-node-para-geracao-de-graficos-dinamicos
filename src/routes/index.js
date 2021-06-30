@@ -35,7 +35,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         mes_atual = data.getMonth()+1
         dia_atual  = data.getDate()
         ano_atual  = data.getFullYear()
-        horas_atual = data.getHours() - 0
+        horas_atual = data.getHours() - 3
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
         minutes_atual  = data.getMinutes() + 2
         minutes_atual = ((minutes_atual < 10)? '0': '')+minutes_atual
