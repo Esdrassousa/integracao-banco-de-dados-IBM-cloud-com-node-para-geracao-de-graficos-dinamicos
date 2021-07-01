@@ -51,7 +51,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         }
         else{
 
-            horas_atual = data.getHours() - 3
+            horas_atual = data.getHours() - 0
         }
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
         minutes_atual  = data.getMinutes() + 2
@@ -126,7 +126,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         await response.status(200).send(vetor);
         
         
-        //console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
+        console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
       
     }catch(err){
         console.log(err);
