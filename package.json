@@ -5,7 +5,7 @@
   "module": "module",
   "scripts": {
     
-    "start" : "PROD=true  node ./bin/server.js"
+    "start" : "PROD=true node ./bin/server.js"
     
   },
   "keywords": [],
