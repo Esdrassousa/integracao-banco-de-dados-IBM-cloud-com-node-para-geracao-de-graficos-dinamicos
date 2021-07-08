@@ -8,6 +8,8 @@ const  url  = process.env.URL_IMB;
 const cors = require('cors');
 var jsonParser = express.json()
 
+
+/* try { */
 const cloudant = Cloudant({
     url:url,
     plugins:{
@@ -18,10 +20,12 @@ const cloudant = Cloudant({
     }
 })
 const db = cloudant.db.use(process.env.BD)
-
+/* }catch(err){
+    console.log(err)
+} */
 const route =  router.post('/', jsonParser , async (request,response) =>{
    
-
+    
     const {minutes_recebidos}  = request.body
     var minutes_recebidos_int = parseInt(minutes_recebidos)
     console.log(minutes_recebidos_int)
