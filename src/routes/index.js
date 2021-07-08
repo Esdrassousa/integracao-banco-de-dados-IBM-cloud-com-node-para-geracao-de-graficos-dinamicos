@@ -6,8 +6,18 @@ const { all } = require('async');
 const  url  = process.env.URL_IMB;
 
 const cors = require('cors');
-const bodyParser = require('body-parser')
-var jsonParser = bodyParser.json()
+var jsonParser = express.json()
+
+const cloudant = Cloudant({
+    url:url,
+    plugins:{
+        iamauth:{
+            
+            iamApiKey : process.env.KEY_IAM
+        }
+    }
+})
+const db = cloudant.db.use(process.env.BD)
 
 const route =  router.post('/', jsonParser , async (request,response) =>{
    
@@ -17,7 +27,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
     console.log(minutes_recebidos_int)
     
     try{
-        const cloudant = Cloudant({
+        /* const cloudant = Cloudant({
             url:url,
             plugins:{
                 iamauth:{
@@ -25,10 +35,11 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
                     iamApiKey : process.env.KEY_IAM
                 }
             }
-        })
-        let allbd = await cloudant.db.list();
-        console.log(`${allbd}`)
-        const db = cloudant.db.use(process.env.BD)
+        }) */
+        //let allbd = await cloudant.db.list();
+        //console.log(`${allbd}`)
+
+        //const db = cloudant.db.use(process.env.BD)
 
         ///////data/////////////////////
         const data  =  new Date()
@@ -85,8 +96,8 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         data_completa_atual =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_atual + ":" + minutes_atual + ":" +'59'
         data_completa_anterior =  mes_atual + '/' + dia_atual + '/' + ano_atual + ',' + ' ' +  horas_anterior + ":" + minute_anterior + ":" +'00'
 
-        console.log('data atual: ',(String(data_completa_atual)))
-        console.log('data anterio : ', (String(data_completa_anterior)))
+        //console.log('data atual: ',(String(data_completa_atual)))
+        //console.log('data anterio : ', (String(data_completa_anterior)))
         ////////////////////////////////
         function delay_tempo(segundos){
             var start = new Date().getTime();
@@ -105,16 +116,20 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         
         
         res = res['docs']
-        //console.log('o valor é: ' , res[1])
+        console.log('o valor é: ' , res[1]  )
         tamanho = res.length
         //console.log(tamanho)
         vetor =[['', 'corrente']]
         for(i=0; i<tamanho ; i++){
            res1 = res[i]['_id'] 
-           const splits = res1.split(',')
-           resI = res[i]    
+           
+           resI = res[i]
+           const splits = resI['data'].split(',')
+           const splits2 = splits[1].split(':')
+           const horas_minutos = splits2[0] + ':' + splits2[1]      
            //console.log('aqui é: ', resI)
-           vetor.push([resI['data'],parseFloat(resI['ia'])])
+           //vetor.push([resI['data'],parseFloat(resI['ia'])])
+           vetor.push([horas_minutos,parseFloat(resI['ia'])])
         }
  //console.log(vetor.slice(0,10))
 
@@ -126,7 +141,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         await response.status(200).send(vetor);
         
         
-        console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
+        //console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
       
     }catch(err){
         console.log(err);
