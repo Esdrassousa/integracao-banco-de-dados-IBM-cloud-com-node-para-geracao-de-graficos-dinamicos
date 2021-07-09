@@ -10,7 +10,7 @@ var jsonParser = express.json()
 
 
 /* try { */
-const cloudant = Cloudant({
+/* const cloudant = Cloudant({
     url:url,
     plugins:{
         iamauth:{
@@ -19,7 +19,7 @@ const cloudant = Cloudant({
         }
     }
 })
-const db = cloudant.db.use(process.env.BD)
+const db = cloudant.db.use(process.env.BD) */
 /* }catch(err){
     console.log(err)
 } */
@@ -31,7 +31,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
     console.log(minutes_recebidos_int)
     
     try{
-        /* const cloudant = Cloudant({
+        const cloudant = Cloudant({
             url:url,
             plugins:{
                 iamauth:{
@@ -39,11 +39,11 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
                     iamApiKey : process.env.KEY_IAM
                 }
             }
-        }) */
+        })
         //let allbd = await cloudant.db.list();
         //console.log(`${allbd}`)
 
-        //const db = cloudant.db.use(process.env.BD)
+        const db = cloudant.db.use(process.env.BD)
 
         ///////data/////////////////////
         const data  =  new Date()
@@ -113,7 +113,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
 
         }
 
-        //delay_tempo(3000)
+        //delay_tempo(500)
         res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
         //res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
 
