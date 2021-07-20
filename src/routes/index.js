@@ -4,28 +4,17 @@ const router = express.Router();
 const Cloudant = require('@cloudant/cloudant');
 const { all } = require('async');
 const  url  = process.env.URL_IMB;
-
+const Bull = require("bull");
 const cors = require('cors');
+const redis = require("redis");
 var jsonParser = express.json()
+const Queue = new Bull("Queue", { redis: { port: 6379, host: "redis" } });
+const myFirstQueue = new Bull('my-first-queue');
 
 
-/* try { */
-/* const cloudant = Cloudant({
-    url:url,
-    plugins:{
-        iamauth:{
-            
-            iamApiKey : process.env.KEY_IAM
-        }
-    }
-})
-const db = cloudant.db.use(process.env.BD) */
-/* }catch(err){
-    console.log(err)
-} */
-const route =  router.post('/', jsonParser , async (request,response) =>{
-   
-    
+const route = (router.post('/', jsonParser ,  async (request,response) =>{
+    //const myFirstQueue = new Bull('my-first-queue');
+    //Queue.add({...request.body})
     const {minutes_recebidos}  = request.body
     var minutes_recebidos_int = parseInt(minutes_recebidos)
     console.log(minutes_recebidos_int)
@@ -43,7 +32,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         //let allbd = await cloudant.db.list();
         //console.log(`${allbd}`)
 
-        const db = cloudant.db.use(process.env.BD)
+        const db = (cloudant.db.use(process.env.BD))
 
         ///////data/////////////////////
         const data  =  new Date()
@@ -66,7 +55,7 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         }
         else{
 
-            horas_atual = data.getHours() - 3
+            horas_atual = data.getHours() - 0
         }
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
         minutes_atual  = data.getMinutes() + 2
@@ -114,37 +103,68 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
         }
 
         //delay_tempo(500)
-        res =  await db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }})   
+        res =  await (db.find({ selector : {_id: { $gt: (String(data_completa_anterior)) , $lt: (String(data_completa_atual)) } }}))   
         //res =  await db.find({ selector : {_id: { $gt: '6/23/2021, 14:07:00' , $lt: '6/23/2021, 15:57:00' } }})   
-
         
         
+        //console.log(res)
         res = res['docs']
-        console.log('o valor é: ' , res[1]  )
+        //console.log('o valor é: ' , res[1]  )
         tamanho = res.length
         //console.log(tamanho)
-        vetor =[['', 'corrente']]
+        //vetor =[['', 'corrente a', 'corrente b', 'corrente c']]
+        vetor =[]
+        horas_minutos = []
+        Corrente1 = []
+        Corrente2 = []
+        Corrente3 = []
+        Tensao1 = []
+        Tensao2 = []
+        Tensao3 = []
         for(i=0; i<tamanho ; i++){
            res1 = res[i]['_id'] 
            
            resI = res[i]
+
+           ///TRIFASICO
+           resDados = resI['dados']
+           //resDados_completos = resDados
+           resCorrente1 = resDados[0].iarms
+           resCorrente2 = resDados[0].ibrms
+           resCorrente3 = resDados[0].icrms
+
+           resTensao1 = resDados[0].uarms
+           resTensao2 = resDados[0].ubrms
+           resTensao3 = resDados[0].ucrms
+
            const splits = resI['data'].split(',')
            const splits2 = splits[1].split(':')
-           const horas_minutos = splits2[0] + ':' + splits2[1]      
-           //console.log('aqui é: ', resI)
+           const res_horas_minutos = splits2[0] + ':' + splits2[1]      
+           console.log('aqui é: ', resTensao3)
+           //console.log('a hora é:: ', horas_minutos)
            //vetor.push([resI['data'],parseFloat(resI['ia'])])
-           vetor.push([horas_minutos,parseFloat(resI['ia'])])
+           ///MONOFASICO
+           //vetor.push([horas_minutos,parseFloat(resI['ia'])])
+           horas_minutos.push(res_horas_minutos) 
+           Corrente1.push(parseFloat(resCorrente1))
+           Corrente2.push(parseFloat(resCorrente2))
+           Corrente3.push(parseFloat(resCorrente3))
+           Tensao1.push(parseFloat(resTensao1))
+           Tensao2.push(parseFloat(resTensao2))
+           Tensao3.push(parseFloat(resTensao3))
+           //////TRIFASICO
+           //vetor.push([horas_minutos,parseFloat(resCorrente1),parseFloat(resCorrente2),parseFloat(resCorrente3)])
+           
+           //console.log(vetor_completo)
         }
  //console.log(vetor.slice(0,10))
-
-        response.setHeader('Access-Control-Allow-Origin', process.env.URL);
+        await vetor.push([horas_minutos],[Corrente1],[Corrente2],[Corrente3],[Tensao1],[Tensao2],[Tensao3])
+        response.setHeader('Access-Control-Allow-Origin', process.env.URL_LOCAL);
         response.setHeader('Access-Control-Allow-Credentials', true);
-      
 
-       
         await response.status(200).send(vetor);
         
-        
+        //console.log(vetor)
         //console.log(vetor.slice((vetor.length  - 5),(vetor.length)))
       
     }catch(err){
@@ -152,6 +172,6 @@ const route =  router.post('/', jsonParser , async (request,response) =>{
     }
     
 
-})
+}))
 
 module.exports =route

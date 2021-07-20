@@ -4,9 +4,7 @@
   "main": "index.js",
   "module": "module",
   "scripts": {
-    
-    "start" : "PROD=true node ./bin/server.js"
-    
+    "start": "nodemon ./bin/server.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +13,7 @@
     "@cloudant/cloudant": "^4.3.1",
     "body-parse": "^0.1.0",
     "body-parser": "^1.19.0",
+    "bull": "^3.22.11",
     "cors": "^2.8.5",
     "debug": "^4.3.1",
     "dotenv": "^10.0.0",
@@ -24,7 +23,8 @@
     "influxdb-nodejs": "^3.1.0",
     "react": "^17.0.2",
     "react-chartjs-2": "^3.0.3",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "redis": "^3.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
