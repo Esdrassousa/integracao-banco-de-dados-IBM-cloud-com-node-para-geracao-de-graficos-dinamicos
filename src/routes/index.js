@@ -55,7 +55,7 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
         }
         else{
 
-            horas_atual = data.getHours() - 0
+            horas_atual = data.getHours() - 3
         }
         horas_atual = ((horas_atual < 10) ? '0' : '') + horas_atual
         minutes_atual  = data.getMinutes() + 2
@@ -159,7 +159,7 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
         }
  //console.log(vetor.slice(0,10))
         await vetor.push([horas_minutos],[Corrente1],[Corrente2],[Corrente3],[Tensao1],[Tensao2],[Tensao3])
-        response.setHeader('Access-Control-Allow-Origin', process.env.URL_LOCAL);
+        response.setHeader('Access-Control-Allow-Origin', process.env.URL);
         response.setHeader('Access-Control-Allow-Credentials', true);
 
         await response.status(200).send(vetor);
