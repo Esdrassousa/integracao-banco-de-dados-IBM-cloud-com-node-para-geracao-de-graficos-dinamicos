@@ -42,15 +42,15 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
 
         horas_atual = data.getHours()
 
-        if (horas_atual == 0){
+        if (horas_atual == 00){
             horas_atual = 21
         }
 
-        if (horas_atual == 1){
+        if (horas_atual == 01){
             horas_atual = 22
         }
 
-        if (horas_atual == 2){
+        if (horas_atual == 02){
             horas_atual = 23
         }
         else{
@@ -136,16 +136,35 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
            resTensao1 = resDados[0].uarms
            resTensao2 = resDados[0].ubrms
            resTensao3 = resDados[0].ucrms
+        
+           
+           resFatorPot1 = parseFloat(resDados[0].pfa)
+           resFatorPot2 = parseFloat(resDados[0].pfb)
+           resFatorPot3 = parseFloat(resDados[0].pfc)
+
+           if (resFatorPot1 < 0){
+            resFatorPot1 = resFatorPot1*(-1)
+           }
+           if (resFatorPot2 < 0){
+            resFatorPot2 = resFatorPot2*(-1)
+           }
+           if (resFatorPot3 < 0){
+            resFatorPot3 = resFatorPot3*(-1)
+           }
 
            const splits = resI['data'].split(',')
            const splits2 = splits[1].split(':')
            const res_horas_minutos = splits2[0] + ':' + splits2[1]      
-           console.log('aqui é: ', resTensao3)
+           //console.log('aqui é: ', resDados)
            //console.log('a hora é:: ', horas_minutos)
            //vetor.push([resI['data'],parseFloat(resI['ia'])])
            ///MONOFASICO
            //vetor.push([horas_minutos,parseFloat(resI['ia'])])
-           horas_minutos.push(res_horas_minutos) 
+           if (i%2 === 0){horas_minutos.push(null)}else{
+            horas_minutos.push(res_horas_minutos)
+            
+           }
+           
            Corrente1.push(parseFloat(resCorrente1))
            Corrente2.push(parseFloat(resCorrente2))
            Corrente3.push(parseFloat(resCorrente3))
@@ -158,7 +177,9 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
            //console.log(vetor_completo)
         }
  //console.log(vetor.slice(0,10))
-        await vetor.push([horas_minutos],[Corrente1],[Corrente2],[Corrente3],[Tensao1],[Tensao2],[Tensao3])
+        await vetor.push([horas_minutos],[Corrente1],[Corrente2],[Corrente3],
+                            [Tensao1],[Tensao2],[Tensao3],
+                            [resFatorPot1],[resFatorPot2],[resFatorPot3])
         response.setHeader('Access-Control-Allow-Origin', process.env.URL);
         response.setHeader('Access-Control-Allow-Credentials', true);
 
