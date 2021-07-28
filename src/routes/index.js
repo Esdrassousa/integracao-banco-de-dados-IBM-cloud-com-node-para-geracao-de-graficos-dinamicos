@@ -121,6 +121,7 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
         Tensao1 = []
         Tensao2 = []
         Tensao3 = []
+        FatorPotTotal = []
         for(i=0; i<tamanho ; i++){
            res1 = res[i]['_id'] 
            
@@ -142,6 +143,8 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
            resFatorPot2 = parseFloat(resDados[0].pfb)
            resFatorPot3 = parseFloat(resDados[0].pfc)
 
+           resFatorPotTotal = parseFloat(resDados[0].pft)
+           console.log(resFatorPotTotal)
            if (resFatorPot1 < 0){
             resFatorPot1 = resFatorPot1*(-1)
            }
@@ -150,6 +153,10 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
            }
            if (resFatorPot3 < 0){
             resFatorPot3 = resFatorPot3*(-1)
+           }
+
+           if (resFatorPotTotal < 0){
+            resFatorPotTotal = resFatorPotTotal*(-1)
            }
 
            const splits = resI['data'].split(',')
@@ -171,6 +178,7 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
            Tensao1.push(parseFloat(resTensao1))
            Tensao2.push(parseFloat(resTensao2))
            Tensao3.push(parseFloat(resTensao3))
+           FatorPotTotal.push(resFatorPotTotal)
            //////TRIFASICO
            //vetor.push([horas_minutos,parseFloat(resCorrente1),parseFloat(resCorrente2),parseFloat(resCorrente3)])
            
@@ -179,7 +187,8 @@ const route = (router.post('/', jsonParser ,  async (request,response) =>{
  //console.log(vetor.slice(0,10))
         await vetor.push([horas_minutos],[Corrente1],[Corrente2],[Corrente3],
                             [Tensao1],[Tensao2],[Tensao3],
-                            [resFatorPot1],[resFatorPot2],[resFatorPot3])
+                            [resFatorPot1],[resFatorPot2],[resFatorPot3],
+                            [FatorPotTotal])
         response.setHeader('Access-Control-Allow-Origin', process.env.URL);
         response.setHeader('Access-Control-Allow-Credentials', true);
 
